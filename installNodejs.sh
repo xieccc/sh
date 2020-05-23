@@ -15,25 +15,47 @@ recordfile=/home/nodejs.tar.xz
 if [ ! -f "$recordfile" ] ;then
 	echo "download nodejs fail, please check your network or check nodejs version"
 else
+    echo "remove old version of nodejs"
     rm -rf /home/nodejs
 
-    tar -xvf /home/nodejs.tar.xz -C /home/
+    echo "unzip nodejs package"    
+    tar -xf /home/nodejs.tar.xz -C /home/
 
     mv "/home/node-$ver-linux-x64" /home/nodejs
 
-    rm /usr/local/bin/node /usr/local/bin/npm
+# 配置nodejs命令的环境变量, 全局命令的系统环境变量
+    echo "set nodejs system environment variables"
+    echo "export PATH=$PATH:/home/nodejs:/home/node_modules" > /etc/profile.d/nodejs.sh
+    echo "export NODE_PATH=/home/node_modules/lib/node_modules" >> /etc/profile.d/nodejs.sh
 
-    ln -s /home/nodejs/bin/node /usr/local/bin/
+    chmod 755 /etc/profile.d/nodejs.sh
 
-    ln -s /home/nodejs/bin/npm /usr/local/bin/
+    source /etc/profile
 
+# 配置npm全局命令路径
+    echo "set npm package global path"
+    npm config set prefix "/home/node_modules"
+# 配置npm包缓存路径
+    echo "set npm package cache path"
+    npm config set cache "/home/npm_cache"
+
+# 删除下载的文件
+    echo "remove cache install file"
     rm /home/installNodejs.html /home/nodejs.tar*
 
+# 打印输出
     echo ""
     echo ""
     echo "nodejs install success"
-    echo "nodejs path: /home/nodejs"
+    echo ""
+    echo "nodejs path:         /home/nodejs"
+    echo "npm global path:     /home/node_modules"
+    echo "npm cache path:      /home/npm_cache"
     node=$(node -v)
     npm=$(npm -v)
+    echo ""
     echo "node --version:  $node  npm --version: $npm"
+    echo ""
+    echo "please exit and log in again if you are using it for the first time"
 fi
+
