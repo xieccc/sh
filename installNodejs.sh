@@ -2,9 +2,11 @@ ver=""
 if [ x$1 != x ] ;then
 	ver=$1
 else
-	wget http://nodejs.cn/download/ -O /home/installNodejs.html
-	ver=$(cat /home/installNodejs.html | grep 'v[0-9]*\.[0-9]*\.[0-9]*' -o | awk NR==1)
+	wget https://npm.taobao.org/mirrors/node/index.json -O /home/nodejsVersion.json
+	ver=$(cat /home/nodejsVersion.json | grep 'v[0-9]*\.[0-9]*\.[0-9]*' -o | awk NR==1)
 fi
+
+echo "download nodejs version $ver"
 
 url="https://npm.taobao.org/mirrors/node/$ver/node-$ver-linux-x64.tar.xz"
 
@@ -41,7 +43,7 @@ else
 
 # 删除下载的文件
     echo "remove cache install file"
-    rm /home/installNodejs.html /home/nodejs.tar*
+    rm /home/nodejsVersion.json /home/nodejs.tar*
 
 # 打印输出
     echo ""
