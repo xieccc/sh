@@ -27,7 +27,8 @@ else
 
 # 配置nodejs命令的环境变量, 全局命令的系统环境变量
     echo "set nodejs system environment variables"
-    echo "export PATH=$PATH:/home/nodejs:/home/node_modules" > /etc/profile.d/nodejs.sh
+    export PATH=$(echo $PATH | tr : "\n"| sort | uniq | tr "\n" :)
+    echo "export PATH=$PATH:/home/nodejs:/home/nodejs/bin:/home/node_modules:/home/node_modules/bin" > /etc/profile.d/nodejs.sh
     echo "export NODE_PATH=/home/node_modules/lib/node_modules" >> /etc/profile.d/nodejs.sh
 
     chmod 755 /etc/profile.d/nodejs.sh
